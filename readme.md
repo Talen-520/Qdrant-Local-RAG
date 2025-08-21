@@ -3,6 +3,8 @@
 [![Python Version](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+English | <a href="https://github.com/Talen-520/StockAgent/blob/main/README_CN.md">中文</a>
+
 This is a fully-featured, local RAG (Retrieval-Augmented Generation) chat application. It uses [Ollama](https://ollama.com/) to run open-source Large Language Models (like Gemma) locally and leverages the [Qdrant](https://qdrant.tech/) vector database for efficient semantic search. The entire experience is delivered through a modern web UI.
 
 The entire application runs completely on your local machine, ensuring data privacy and security.
@@ -43,8 +45,8 @@ Follow these steps carefully to set up and launch the application.
 
 1.  **Clone this repository**
     ```bash
-    git clone [https://github.com/](https://github.com/)[your-username]/[your-repo-name].git
-    cd [your-repo-name]
+    git clone https://github.com/Talen-520/Qdrant-Local-RAG.git
+    cd Qdrant-Local-RAG
     ```
 
 2.  **Download and run the Ollama model**
