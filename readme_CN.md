@@ -3,7 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-中文｜<a href="https://github.com/Talen-520/StockAgent/blob/main/README.md">English</a>
+中文｜<a href="https://github.com/Talen-520/Qdrant-Local-RAG/blob/main/readme.md">English</a>
 
 这是一个功能齐全的本地 RAG (Retrieval-Augmented Generation) 聊天应用。它使用 [Ollama](https://ollama.com/) 在本地运行开源大语言模型 (如 Gemma)，并借助 [Qdrant](https://qdrant.tech/) 向量数据库进行高效的语义搜索，最终通过一个现代化的 Web UI 提供交互式聊天体验。
 
