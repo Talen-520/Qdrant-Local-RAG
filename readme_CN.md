@@ -52,10 +52,13 @@ https://github.com/user-attachments/assets/9be0888f-9666-4c11-b1aa-bec0a5cc21ea
     ```
 
 2.  **下载并运行 Ollama 模型**
-    安装 Ollama 后，在终端执行以下命令来下载并首次运行 `gemma` 模型。这可能需要一些时间，取决于你的网络和硬件。
+    安装 Ollama 后，在终端执行以下命令来下载并首次运行 `gemma` 和 `nomic-embed-text:latest` 模型。这可能需要一些时间，取决于你的网络和硬件。
 
     ```bash
-    ollama run gemma
+    # nlp 
+    ollama pull gemma
+    # embedding
+    ollama pull nomic-embed-text:latest
     ```
     > 你可以替换成任何你想使用的其他 Ollama 模型，例如 `llama3`, `mistral` 等。
 
