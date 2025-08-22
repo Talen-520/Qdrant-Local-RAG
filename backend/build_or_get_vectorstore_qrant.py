@@ -5,7 +5,7 @@
 - 支持 structured table -> payload 构造
 - 支持 metadata filter + 自定义 re-ranking（weighting）
 """
-
+from config import *
 import os
 from pathlib import Path
 from typing import List, Dict, Optional, Generator, Any
@@ -21,8 +21,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
 from qdrant_client.http import models as qmodels
-
-# LangChain Qdrant vector store wrapper (官方示例使用)
 from langchain_qdrant import QdrantVectorStore, RetrievalMode
 
 # qdrant client 用于 collection 创建与 filter models
@@ -39,14 +37,6 @@ from qdrant_client.http.models import (
 # ----------------- 配置 -----------------
 SCRIPT_DIR = Path(__file__).parent
 KNOWLEDGE_BASE_DIR = SCRIPT_DIR / "knowledge_base"
-
-QDRANT_URL = "http://localhost:6333"
-QDRANT_PATH = "/tmp/langchain_qdrant"
-QDRANT_COLLECTION = "knowledge_base"
-EMBEDDING_MODEL_NAME = "nomic-embed-text:latest"
-
-CHUNK_SIZE = 512
-CHUNK_OVERLAP = 102
 
 # ----------------- Loader helpers -----------------
 def _is_structured_file(filename: str) -> bool:
@@ -241,7 +231,7 @@ def build_or_get_vectorstore(
         print(f"Failed to build vectorstore wrapper: {e}")
         return None
 
-# ----------------- 搜索与二次排序（自定义加权） -----------------
+# ----------------- re-ranking and custom scoring  -----------------
 def semantic_search_with_custom_scoring(
     vector_store: QdrantVectorStore,
     query: str,

@@ -179,7 +179,7 @@ class QdrantRAGChain:
         results = self.retrieve_documents(query, top_k, file_filters)
         
         if not results:
-            return "根据您选择的文件，我找不到任何相关的文档来回答您的问题。", []
+            return "Based on the file you selected, I can't find any relevant documentation to answer your question.", []
         
         context = format_docs_from_custom_results(results)
         
