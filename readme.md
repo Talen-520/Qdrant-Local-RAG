@@ -54,9 +54,12 @@ Follow these steps carefully to set up and launch the application.
     ```
 
 2.  **Download and run the Ollama model**
-    After installing Ollama, run the following command in your terminal to download and run the `gemma` model for the first time. This may take a while, depending on your internet connection and hardware.
+    After installing Ollama, run the following command in your terminal to download `gemma` and `nomic-embed-text:latest` model for the first time. This may take a while, depending on your internet connection and hardware.
     ```bash
-    ollama run gemma
+    # nlp 
+    ollama pull gemma
+    # embedding
+    ollama pull nomic-embed-text:latest
     ```
     > You can replace `gemma` with any other model supported by Ollama, such as `llama3`, `mistral`, etc.
 
