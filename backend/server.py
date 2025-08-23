@@ -11,6 +11,8 @@ import functools
 from typing import Generator, Any, Optional, Dict, List
 from chat import initialize_rag_chain, QdrantRAGChain
 from contextlib import asynccontextmanager # 👈 1. Import asynccontextmanager
+import ollama
+import sys
 
 # --- Global variable ---
 rag_chain: Optional[QdrantRAGChain] = None
@@ -69,7 +71,7 @@ class QueryRequest(BaseModel):
     top_k: int = 6
     file_filters: Optional[List[str]] = None # file type filters, e.g., ["pdf", "docx"]
     preferred_sources: Optional[List[str]] = None 
-    preferred_model: Optional[str] = None 
+    model: Optional[str] = None # Renamed from preferred_model for clarity
 
 
 class SourceDocument(BaseModel):
@@ -91,22 +93,7 @@ async def to_async_generator(sync_gen: Generator[Any, None, Any]):
         yield item
         await asyncio.sleep(0.001)
 
-@app.on_event("startup")
-async def startup_event():
-    """
-    在服务器启动时执行的异步函数。
-    它会初始化 RAG Chain 并将其存储在全局变量中。
-    """
-    global rag_chain
-    print("--- Server is starting up, initializing RAG chain... ---")
-    rag_chain = await run_in_threadpool(initialize_rag_chain)
-    if rag_chain is None:
-        print("FATAL: RAG Chain failed to initialize. The API will not be functional.")
-    else:
-        print("--- RAG Chain loaded successfully. Server is ready. ---")
-
 # --- API 端点 ---
-
 
 @app.get("/files")
 async def list_files():
@@ -160,7 +147,33 @@ async def delete_file(filename: str):
     
     return await list_files()
 
-
+@app.get("/models")
+async def get_ollama_models():
+    """
+    Fetches the list of locally installed Ollama models.
+    """
+    try:
+        response = ollama.list()
+        
+        # DEBUG: You can keep or remove this line now that we've found the issue.
+        print(f"DEBUG: Raw response from ollama.list(): {response}") 
+        
+        # --- 👇 CORRECTED LINE 👇 ---
+        # Access the list with `response.models` and each model name with `m.model`
+        installed_models = [m.model for m in response.models]
+        
+        if not installed_models:
+            print("Warning: No local Ollama models found inside the endpoint.")
+            return {"models": []}
+            
+        return {"models": installed_models}
+    except Exception as e:
+        # This will now catch other potential errors, but not the KeyError
+        print(f"Error processing Ollama models: {e}", file=sys.stderr)
+        raise HTTPException(
+            status_code=500,
+            detail=f"An error occurred while processing Ollama models: {e}"
+        )
 
 @app.get("/embed-stream")
 async def embed_stream():
@@ -205,6 +218,8 @@ async def ask_question(request: QueryRequest):
             query=request.query, 
             top_k=request.top_k,
             file_filters=request.file_filters, 
+            model=request.model  
+
 
         )
 

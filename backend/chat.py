@@ -167,31 +167,50 @@ class QdrantRAGChain:
             print(f"Error during document retrieval: {e}")
             return []
     
-    def invoke(self, query: str, top_k: int = 6, file_filters: Optional[List[str]] = None) -> tuple[str, list[dict]]:
+    def invoke(self, query: str, top_k: int = 6, file_filters: Optional[List[str]] = None, model: Optional[str] = None) -> tuple[str, list[dict]]:
         """
-        完整的 RAG 流程: 检索 -> 格式化 -> 生成答案。
+        The complete RAG process: retrieve -> format -> generate answer.
+        Now accepts an optional 'model' parameter to dynamically switch LLMs.
         """
-        print(f"正在搜索: '{query}'")
+        print(f"Searching for: '{query}'")
         if file_filters:
-            print(f"   - 应用文件过滤器: {file_filters}")
+            print(f"   - Applying file filters: {file_filters}")
         
-        # 将 file_filters 传递给检索方法
         results = self.retrieve_documents(query, top_k, file_filters)
         
         if not results:
-            return "Based on the file you selected, I can't find any relevant documentation to answer your question.", []
+            return "Based on the selected files, I can't find any relevant documentation to answer your question.", []
         
         context = format_docs_from_custom_results(results)
         
+        # --- 👇 MODIFICATION START 👇 ---
+        
+        # Default to the LLM initialized with the chain
+        llm_to_use = self.llm 
+        
+        # If a specific model is requested for this query, create a new instance
+        if model:
+            print(f"Switching to model for this request: {model}")
+            try:
+                # This creates a temporary LLM instance for the current request
+                llm_to_use = ChatOllama(model=model)
+            except Exception as e:
+                print(f"Could not initialize model '{model}'. Falling back to default. Error: {e}")
+        
+        # --- 👆 MODIFICATION END 👆 ---
+        
         try:
-            print("正在生成回应...")
+            print("Generating response...")
             formatted_prompt = self.prompt.format(context=context, input=query)
-            response = self.llm.invoke(formatted_prompt)
-            return response.content, results
+            
+            # Use the determined LLM instance (either default or temporary)
+            response = llm_to_use.invoke(formatted_prompt)
+            
+            return str(response.content), results
+            
         except Exception as e:
-            print(f"生成回应时出错: {e}")
-            return f"生成回应时发生错误: {e}", results
-
+            print(f"Error during response generation: {e}")
+            return f"An error occurred while generating the response: {e}", results
 
 def initialize_vectorstore(mode: str = "server", recreate: bool = False) -> Optional[object]:
     """
