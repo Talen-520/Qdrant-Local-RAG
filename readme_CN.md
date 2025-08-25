@@ -1,4 +1,4 @@
-# [项目名称] - 本地 RAG 聊天机器人
+# 基于Qdrant 向量数据库的本地 RAG 聊天机器人
 
 [![Python Version](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +9,7 @@
 
 整个应用完全在你的本地机器上运行，确保了数据的隐私和安全。
 
-https://github.com/user-attachments/assets/9be0888f-9666-4c11-b1aa-bec0a5cc21ea
+![Project Demo GIF](assets/Demo.gif)
 
 ---
 
