@@ -10,7 +10,7 @@ This is a fully-featured, local RAG (Retrieval-Augmented Generation) chat applic
 The entire application runs completely on your local machine, ensuring data privacy and security.
 
 
-https://github.com/user-attachments/assets/9be0888f-9666-4c11-b1aa-bec0a5cc21ea
+![Project Demo GIF](assets/Demo.gif)
 
 
 ---
